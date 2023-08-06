@@ -1,0 +1,17 @@
+.home {
+    align-items: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    font-size: calc(1rem + 1.5vmin);
+    justify-content: center;
+    margin: auto;
+    max-width: 90vw;
+    text-align: center;
+}
+
+@media (min-width: 1200px) {
+    .home {
+        max-width: 60vw;
+    }
+}
