@@ -35,7 +35,8 @@ async def new_drink(
     description_drink: Optional[str] = None,
     description_amount: Optional[str] = None,
 ):
-    if drink_type in [drink.drink_type for drink in inventory.drink_list]:
+    drink_type = drink_type.lower()
+    if drink_type in [drink.drink_type.lower() for drink in inventory.drink_list]:
         raise HTTPException(
             status_code=409,
             detail=f"The drink {drink_type} already exists in the inventory",
@@ -53,20 +54,46 @@ async def new_drink(
     return {"status": "OK", "msg": "Drink added"}
 
 
+@router.get("/{drink_type}")
+async def get_drink(drink_type: str):
+    drink_type = drink_type.lower()
+    # Check if the drink is in the inventory
+    if not any(
+        drink.drink_type.lower() == drink_type for drink in inventory.drink_list
+    ):
+        raise HTTPException(
+            status_code=404,
+            detail=f"Unfortunately, we don't have {drink_type} in our inventory",
+        )
+
+    drink = list(
+        filter(
+            lambda drink: drink.drink_type.lower() == drink_type, inventory.drink_list
+        )
+    )[0]
+
+    return drink
+
+
 # create the put method
 @router.put("/{drink_type}")
 async def update_drink(
     drink_type: str, amount: int, description_drink: str, description_amount: str
 ):
+    drink_type = drink_type.lower()
     # Check if the drink is in the inventory
-    if not any(drink.drink_type == drink_type for drink in inventory.drink_list):
+    if not any(
+        drink.drink_type.lower() == drink_type for drink in inventory.drink_list
+    ):
         raise HTTPException(
             status_code=404,
             detail=f"Unfortunately, we don't have {drink_type} in our inventory",
         )
 
     drink_to_update = list(
-        filter(lambda drink: drink.drink_type == drink_type, inventory.drink_list)
+        filter(
+            lambda drink: drink.drink_type.lower() == drink_type, inventory.drink_list
+        )
     )[0]
 
     drink_to_update.amount = amount
@@ -78,15 +105,20 @@ async def update_drink(
 
 @router.delete("/{drink_type}")
 async def delete_drink(drink_type: str):
+    drink_type = drink_type.lower()
     # Check if the drink is in the inventory
-    if not any(drink.drink_type == drink_type for drink in inventory.drink_list):
+    if not any(
+        drink.drink_type.lower() == drink_type for drink in inventory.drink_list
+    ):
         raise HTTPException(
             status_code=404,
             detail=f"Unfortunately, we don't have {drink_type} in our inventory",
         )
 
     drink_to_delete = list(
-        filter(lambda drink: drink.drink_type == drink_type, inventory.drink_list)
+        filter(
+            lambda drink: drink.drink_type.lower() == drink_type, inventory.drink_list
+        )
     )[0]
 
     inventory.drink_list.remove(drink_to_delete)
