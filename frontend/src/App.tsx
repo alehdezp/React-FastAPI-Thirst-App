@@ -9,9 +9,21 @@ function App() {
             <div className={styles.App}>
                 <Header />
                 <Home />
+                <button onClick={getDrinks}> Get drinks </button>
             </div>
         </Router>
     )
 }
+
+
+
+
+async function getDrinks(){
+    // Make an async request to localhost and return de response in json
+    console.log(await fetch('http://localhost:8000/drinks')
+        .then(response => response.json())
+        .then(data => data))
+}   
+
 
 export default App;
