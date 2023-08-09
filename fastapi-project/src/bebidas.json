@@ -1,0 +1,42 @@
+[
+    {
+        "drink_type": "Cubata",
+        "amount": 7.5
+    },
+    {
+        "drink_type": "Mojito",
+        "amount": 5.2
+    },
+    {
+        "drink_type": "Old Fashioned",
+        "amount": 8.7
+    },
+    {
+        "drink_type": "Negroni",
+        "amount": 6.8
+    },
+    {
+        "drink_type": "Martini",
+        "amount": 5.5
+    },
+    {
+        "drink_type": "Piña Colada",
+        "amount": 7.2
+    },
+    {
+        "drink_type": "Daiquiri",
+        "amount": 6.1
+    },
+    {
+        "drink_type": "Whiskey Sour",
+        "amount": 8.9
+    },
+    {
+        "drink_type": "Sangria",
+        "amount": 7.7
+    },
+    {
+        "drink_type": "Caipirinha",
+        "amount": 5.9
+    }
+]
