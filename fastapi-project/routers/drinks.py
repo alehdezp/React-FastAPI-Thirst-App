@@ -4,8 +4,11 @@ from typing import Optional
 
 from fastapi import APIRouter
 from pydantic import BaseModel
+from fastapi import HTTPException
 
-drinks = APIRouter()
+router = APIRouter(
+    prefix="/drinks", tags=["drinks"], responses={404: {"description": "Not found"}}
+)
 
 
 class Drink(BaseModel):
@@ -20,16 +23,82 @@ class InventoryDrinks(BaseModel):
 
 
 # Ruta para obtener todas las bebidas
-@drinks.get("/drinks")
+@router.get("/")
 async def get_drinks():
     return inventory
 
 
+@router.post("/")
+async def new_drink(
+    drink_type: str,
+    amount: int,
+    description_drink: Optional[str] = None,
+    description_amount: Optional[str] = None,
+):
+    if drink_type in [drink.drink_type for drink in inventory.drink_list]:
+        raise HTTPException(
+            status_code=409,
+            detail=f"The drink {drink_type} already exists in the inventory",
+        )
+
+    drink = Drink(
+        drink_type=drink_type,
+        description_drink=description_drink,
+        amount=amount,
+        description_amount=description_amount,
+    )
+
+    inventory.drink_list.append(drink)
+    # Respond in json format
+    return {"status": "OK", "msg": "Drink added"}
+
+
+# create the put method
+@router.put("/{drink_type}")
+async def update_drink(
+    drink_type: str, amount: int, description_drink: str, description_amount: str
+):
+    # Check if the drink is in the inventory
+    if not any(drink.drink_type == drink_type for drink in inventory.drink_list):
+        raise HTTPException(
+            status_code=404,
+            detail=f"Unfortunately, we don't have {drink_type} in our inventory",
+        )
+
+    drink_to_update = list(
+        filter(lambda drink: drink.drink_type == drink_type, inventory.drink_list)
+    )[0]
+
+    drink_to_update.amount = amount
+    drink_to_update.description_drink = description_drink
+    drink_to_update.description_amount = description_amount
+
+    return {"status": "OK", "msg": "Drink updated"}
+
+
+@router.delete("/{drink_type}")
+async def delete_drink(drink_type: str):
+    # Check if the drink is in the inventory
+    if not any(drink.drink_type == drink_type for drink in inventory.drink_list):
+        raise HTTPException(
+            status_code=404,
+            detail=f"Unfortunately, we don't have {drink_type} in our inventory",
+        )
+
+    drink_to_delete = list(
+        filter(lambda drink: drink.drink_type == drink_type, inventory.drink_list)
+    )[0]
+
+    inventory.drink_list.remove(drink_to_delete)
+
+    return {"status": "OK", "msg": "Drink deleted"}
+
+
 # Ruta al archivo JSON, home path + /Projects/REACT-FASTAPI-THIRST-APP/fastapi-project/src/bebidas.json
 # home path
-home_path = os.path.expanduser("~")
-file_path = "/Proyectos/React-FastAPI-Thirst-App/fastapi-project/src/bebidas.json"
-full_path = home_path + file_path
+current_path = os.getcwd()
+json_path = "/src/bebidas.json"
+full_path = current_path + json_path
 
 
 # Leer el archivo JSON y almacenar los datos en una lista de objetos Drink
