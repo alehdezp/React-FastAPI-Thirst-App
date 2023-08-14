@@ -1,4 +1,4 @@
-import logo from "./rviewer-logo.svg";
+import logo from "./vending-machine.svg";
 import styles from './Header.module.css'
 
 export function Header() {
