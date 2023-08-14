@@ -28,7 +28,7 @@ async def get_drinks():
     return inventory
 
 
-@router.post("/")
+@router.post("/{drink_type}")
 async def new_drink(
     drink_type: str,
     amount: int,

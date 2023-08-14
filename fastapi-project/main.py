@@ -3,11 +3,13 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
 from routers import drinks
+from routers import auth_users
 
 app = FastAPI()
 
 # Routers
 app.include_router(drinks.router)
+app.include_router(auth_users.router)
 
 
 @app.get("/")
