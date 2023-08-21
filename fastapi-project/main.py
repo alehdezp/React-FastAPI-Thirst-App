@@ -1,9 +1,12 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from routers import drinks
 from routers import auth_users
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
 

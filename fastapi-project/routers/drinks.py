@@ -6,6 +6,9 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from fastapi import HTTPException
 
+from database import get_drinks_db
+
+
 router = APIRouter(
     prefix="/drinks", tags=["drinks"], responses={404: {"description": "Not found"}}
 )
@@ -23,11 +26,19 @@ class InventoryDrinks(BaseModel):
 
 
 # Ruta para obtener todas las bebidas
-@router.get("/")
+@router.get(
+    "/", response_model=list[Drink], description="Get all drinks from the inventory"
+)
 async def get_drinks():
-    return inventory
+    try:
+        drinks_db = get_drinks_db()
+        inventory = list(drinks_db.find({}))
+        return inventory
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
+# TODO: Change the whole program to use mongodb instead the JSON file
 @router.post("/{drink_type}")
 async def new_drink(
     drink_type: str,
@@ -126,8 +137,6 @@ async def delete_drink(drink_type: str):
     return {"status": "OK", "msg": "Drink deleted"}
 
 
-# Ruta al archivo JSON, home path + /Projects/REACT-FASTAPI-THIRST-APP/fastapi-project/src/bebidas.json
-# home path
 current_path = os.getcwd()
 json_path = "/src/bebidas.json"
 full_path = current_path + json_path

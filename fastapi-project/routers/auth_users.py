@@ -26,6 +26,7 @@ class UserInDB(User):
     password: str
 
 
+# --uri "mongodb+srv://aleyadri:password@drink-api.zahpxpn.mongodb.net/?retryWrites=true&w=majority" --collection users --drop --file src/users.json --jsonArray
 users_db = {
     "admin": {
         "id": 0,

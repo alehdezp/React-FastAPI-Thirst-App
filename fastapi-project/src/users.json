@@ -1,0 +1,14 @@
+[
+    "admin": {
+        "id": 0,
+        "username": "admin",
+        "mail": "admin@gmail.com",
+        "password": "$2a$12$k5KG6BzXRshTHy8bozsMd.UPdQ6tnxTGOlQgJ0ZlgWmcRAdRX4UyO",
+    },
+    "adrihp06": {
+        "id": 1,
+        "username": "adrihp06",
+        "mail": "adrihp06@gmail.com",
+        "password": "adrihp06",
+    },
+]
